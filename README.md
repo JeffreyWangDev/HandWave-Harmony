@@ -1,6 +1,7 @@
 # Web Piano
 
 Web Piano is a simple web-based piano application that allows users to play piano directly from their web browser.
+![Normal logo](https://github.com/user-attachments/assets/05a82854-f5bc-4e25-840f-793812a6bb5f)
 
 <img width="1280" alt="image" src="https://github.com/user-attachments/assets/4bac2217-ab4b-4190-8859-f9c16e084693">
 
