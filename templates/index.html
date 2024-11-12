@@ -16,7 +16,7 @@
             background-size: cover;
             background-repeat: no-repeat;
             font-family: 'Arial', sans-serif;
-            color: #333;
+            color: #f2e8cf;
         }
 
         h1 {
@@ -26,8 +26,8 @@
             transform: translateX(-50%);
             text-align: center;
             font-size: 3em;
-            color: #fff;
-            text-shadow: 2px 2px 5px #000;
+            color: #f2e8cf;
+            text-shadow: 2px 2px 5px #386641;
             font-family: 'Lobster', cursive;
             letter-spacing: 2px;
             padding: 10px 20px;
@@ -78,14 +78,12 @@
             overflow: hidden;
         }
 
-
         #piano-left,
         #piano-right {
             width: 100px;
             height: 100%;
             position: relative;
             pointer-events: auto;
-
         }
 
         #piano-left {
@@ -97,13 +95,13 @@
         }
 
         .piano-key {
-            background-color: #fff;
-            border: 1px solid #ddd;
+            background-color: #a7c957;
+            border: 1px solid #6a994e;
             transition: background-color 0.1s ease, box-shadow 0.1s ease;
         }
 
         .piano-key.pressed {
-            background-color: #ddd;
+            background-color: #6a994e;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
@@ -118,6 +116,7 @@
             z-index: 10;
             max-width: 300px;
             font-family: inherit;
+            color: #333;
         }
 
         #info-box h2 {
@@ -125,18 +124,20 @@
         }
 
         #info-box p {
-
             margin-bottom: 1em;
         }
 
         #info-box button {
-            background-color: #007bff;
+            background-color: #386641;
             color: white;
             border: none;
             padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 1em;
+        }
+
+        #info-box button:hover {
+            background-color: #6a994e;
         }
 
         .controls {
@@ -151,7 +152,7 @@
             flex-wrap: wrap;
             gap: 10px;
             z-index: 3;
-            background: linear-gradient(to right, #007bff, #0056b3);
+            background: linear-gradient(to right, #386641, #6a994e);
             box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3);
             padding: 15px;
             margin: 10px;
@@ -171,16 +172,15 @@
 
         button:hover {
             background-color: rgba(255, 255, 255, 0.2);
-
         }
 
         #recordButton {
-            background-color: #dc3545;
+            background-color: #bc4749;
             padding: 10px 40px;
         }
 
         #recordButton:hover {
-            background-color: #c82333;
+            background-color: #843435;
         }
 
         .slider-container {
@@ -215,18 +215,98 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: #007bff;
+            background: #86b6ea;
             cursor: pointer;
+        }
+
+        .recordings-list {
+            position: fixed;
+            bottom: 20px;
+            left: 40%;
+            transform: translateX(-50%);
+            max-height: 200px;
+            background-color: #f2e8cf;
+            padding: 15px;
+            padding-top: 0px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 4;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column-reverse;
+            width: 50%;
+            color: #386641;
+        }
+
+        .recording-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+        .recording-item audio {
+            flex: 1;
+            margin-right: 10px;
+            max-width: 500px;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: transparent;
+        }
+
+        .recording-item a {
+            white-space: nowrap;
+            display: inline-block;
+            background-color: #6a994e;
+            /* Updated color */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .upload {
+            white-space: nowrap;
+            display: inline-block;
+            background-color: #6a994e;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .upload:hover {
+            background-color: #386641;
+        }
+
+        #view-recordings-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #386641;
+            color: white;
+            border: 2px solid #fff;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #view-recordings-button:hover {
+            background-color: #6a994e;
+            transform: translateY(-2px);
         }
 
         .slider-label {
             margin-right: 10px;
             white-space: nowrap;
-
         }
 
         button.active {
-            background-color: #003063;
+            background-color: #a7c957;
         }
 
         #countdown {
@@ -238,93 +318,9 @@
             transform: translate(-50%, -50%);
             display: none;
             z-index: 10;
-
             background-color: rgba(0, 0, 0, 0.5);
             padding: 20px;
             border-radius: 10px;
-        }
-
-        #recordingsList {
-            position: fixed;
-            bottom: 20px;
-            left: 40%;
-            transform: translateX(-50%);
-            max-height: 200px;
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            z-index: 4;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column-reverse;
-            width: 50%;
-        }
-
-
-        .recording-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 5px;
-        }
-
-
-        .recording-item audio {
-            flex: 1;
-            margin-right: 10px;
-            max-width: 500px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 5px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .recording-item a {
-            white-space: nowrap;
-            display: inline-block;
-            background-color: #007bff;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .upload {
-            white-space: nowrap;
-            display: inline-block;
-            background-color: #40e987;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-
-        .upload:hover {
-            background-color: #2f9e6f;
-        }
-
-        #view-recordings-button {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        #view-recordings-button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-
         }
     </style>
 </head>
@@ -517,10 +513,10 @@
                 });
                 recordingItem.appendChild(uploadLink);
 
-                recordingsList.appendChild(recordingItem); 
+                recordingsList.appendChild(recordingItem);
 
 
-                const recordingsDisplay = document.getElementById("recordingsList"); 
+                const recordingsDisplay = document.getElementById("recordingsList");
                 recordingsDisplay.style.display = "block";
 
             } catch (err) {
