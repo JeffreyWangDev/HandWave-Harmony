@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HandWave Harmony - Recordings</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: url('/static/music-background.jpg');
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #recordings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            width: 90%;
+            max-width: 1200px;
+        }
+
+        .recording {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .recording:hover {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .recording audio {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .recording a {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .recording a:hover {
+            background-color: #0056b3;
+        }
+
+        .recording .filename {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #back-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Shared Recordings</h1>
+    <a href="/" id="back-button">Record your own music!</a>
+    <div id="recordings"></div>
+    <div id="recordings"></div>
+
+    <script>
+        async function fetchRecordings() {
+            try {
+                const response = await fetch('/api/recordings');
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                const recordings = await response.json();
+                displayRecordings(recordings);
+
+            } catch (error) {
+                console.error("Error fetching recordings:", error);
+                document.getElementById('recordings').innerHTML = "<p>Error loading recordings.</p>";
+            }
+        }
+
+        function displayRecordings(recordings) {
+            const recordingsContainer = document.getElementById('recordings');
+            recordingsContainer.innerHTML = '';
+
+            if (recordings.length === 0) {
+                recordingsContainer.innerHTML = "<p>No recordings found.</p>";
+                return;
+            }
+
+            recordings.forEach(recording => {
+
+                const recordingDiv = document.createElement('div');
+                recordingDiv.className = 'recording';
+
+                const filenameDiv = document.createElement('div');
+                filenameDiv.className = 'filename';
+                filenameDiv.textContent = recording;
+                recordingDiv.appendChild(filenameDiv);
+
+
+                const audio = document.createElement('audio');
+                audio.src = `/uploads/${recording}`;
+                audio.controls = true;
+                recordingDiv.appendChild(audio);
+
+
+                const downloadLink = document.createElement('a');
+                downloadLink.href = `/uploads/${recording}`;
+                downloadLink.download = recording;
+                downloadLink.textContent = 'Download';
+                recordingDiv.appendChild(downloadLink);
+
+
+
+                recordingsContainer.appendChild(recordingDiv);
+
+            });
+        }
+
+        fetchRecordings(); // Fetch recordings on page load
+    </script>
+</body>
+
+</html>

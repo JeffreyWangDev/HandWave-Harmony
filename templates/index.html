@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>HandWave Harmony</title>
     <meta charset="UTF-8">
@@ -11,7 +12,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: url('music-background.jpg');
+            background: url('/static/music-background.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             font-family: 'Arial', sans-serif;
@@ -20,7 +21,7 @@
 
         h1 {
             position: absolute;
-            top: 20px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
@@ -139,10 +140,8 @@
         }
 
         .controls {
-            position: fixed;
-            bottom: 0;
             left: 0;
-            width: 100%;
+            width: 300px;
             background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             box-sizing: border-box;
@@ -155,6 +154,7 @@
             background: linear-gradient(to right, #007bff, #0056b3);
             box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.3);
             padding: 15px;
+            margin: 10px;
         }
 
         button {
@@ -166,6 +166,7 @@
             transition: background-color 0.3s ease;
             background-color: transparent;
             border: 2px solid #fff;
+            margin: 5px;
         }
 
         button:hover {
@@ -199,7 +200,6 @@
             outline: none;
             border-radius: 5px;
         }
-
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
@@ -243,6 +243,89 @@
             padding: 20px;
             border-radius: 10px;
         }
+
+        #recordingsList {
+            position: fixed;
+            bottom: 20px;
+            left: 40%;
+            transform: translateX(-50%);
+            max-height: 200px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 4;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column-reverse;
+            width: 50%;
+        }
+
+
+        .recording-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+
+
+        .recording-item audio {
+            flex: 1;
+            margin-right: 10px;
+            max-width: 500px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .recording-item a {
+            white-space: nowrap;
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .upload {
+            white-space: nowrap;
+            display: inline-block;
+            background-color: #40e987;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .upload:hover {
+            background-color: #2f9e6f;
+        }
+
+        #view-recordings-button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #view-recordings-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+
+        }
     </style>
 </head>
 
@@ -268,6 +351,7 @@
         </div>
     </div>
     <div class="controls">
+        <a class="vrec" href="/recordings" id="view-recordings-button">View Shared Recordings</a>
         <div id="countdown"></div>
         <div id="tone-btns"> </div>
         <button id="recordButton">Record</button>
@@ -278,6 +362,9 @@
         </div>
         <div id="tone-btns"> </div>
 
+    </div>
+    <div class="recordings-list" id="recordingsList">
+        <h3>Recordings</h3>
     </div>
     </div>
 
@@ -322,7 +409,6 @@
         videoElement.addEventListener('loadedmetadata', () => {
 
 
-            // Now that video dimensions are available, create the piano keys:
             keyElementsLeft = createPianoKeys(pianoLeft, notesLeft);
             keyElementsRight = createPianoKeys(pianoRight, notesRight);
         });
@@ -378,28 +464,75 @@
             }
         }
 
+        const recordingsList = document.getElementById('recordingsList');
+
         async function stopRecording() {
             if (!isRecording || !recorder) return;
             try {
                 const recording = await recorder.stop();
                 const url = URL.createObjectURL(recording);
-                const anchor = document.createElement("a");
-                anchor.href = url;
-                anchor.download = "recording.webm";
-                anchor.click();
-                URL.revokeObjectURL(url);
-            }
-            catch (err) {
 
+                const recordingItem = document.createElement('div');
+                recordingItem.className = 'recording-item';
+
+                const recordingPlayer = document.createElement('audio');
+                recordingPlayer.src = url;
+                recordingPlayer.controls = true;
+                recordingItem.appendChild(recordingPlayer);
+
+                const downloadLink = document.createElement('a');
+                downloadLink.href = url;
+                downloadLink.download = 'recording.webm';
+                downloadLink.textContent = 'Download';
+                recordingItem.appendChild(downloadLink);
+
+                const uploadLink = document.createElement('button');
+                uploadLink.textContent = 'Upload';
+                uploadLink.className = 'upload';
+                uploadLink.addEventListener('click', async () => {
+                    const formData = new FormData();
+                    const filename = prompt("Enter a filename (e.g., my_recording):", "recording");
+                    if (!filename || filename.trim() === "") {
+                        alert("Please enter a valid filename.");
+                        return;
+                    }
+                    formData.append('audio', recording, filename + '.webm');
+                    const response = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        alert("Recording uploaded successfully!");
+
+                    } else if (response.status === 413) {
+                        alert("File size exceeds 1MB limit.");
+                    }
+
+                    else {
+                        const errorData = await response.json();
+                        const errorMessage = errorData.message || "Error uploading recording.";
+                        alert(errorMessage);
+                    }
+                });
+                recordingItem.appendChild(uploadLink);
+
+                recordingsList.appendChild(recordingItem); 
+
+
+                const recordingsDisplay = document.getElementById("recordingsList"); 
+                recordingsDisplay.style.display = "block";
+
+            } catch (err) {
                 console.error("Error stopping recording:", err);
-            }
-            finally {
+            } finally {
                 isRecording = false;
                 recordButton.textContent = "Record";
                 recorder = null;
                 recordButton.disabled = false;
             }
         }
+
         let currentTone = "AMSynth";
 
 

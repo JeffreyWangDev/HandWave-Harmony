@@ -1,9 +1,6 @@
-FROM busybox:1.35
-
-RUN adduser -D static
-USER static
-WORKDIR /home/static
-
-COPY . .
-
-CMD ["busybox", "httpd", "-f", "-v", "-p", "80"]
+FROM tiangolo/uwsgi-nginx-flask:python3.11
+MAINTAINER Jeffrey_Wang, <25wangj@gmail.com>
+EXPOSE 80 443
+copy . /app
+copy requirements.txt requirements.txt
+RUN pip install -r requirements.txt
